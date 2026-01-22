@@ -2,6 +2,11 @@
 
 Nowoczesna aplikacja pogodowa z backendem w Spring Boot oraz frontendem w Angularze.
 
+## Zrzuty ekranu
+
+![Widok desktop](ss1.png)
+![Widok mobilny](ss2.png)
+
 ## Stack
 - Backend: Java 21, Spring Boot, H2, OpenWeather API
 - Frontend: Angular 17, TypeScript, RxJS
