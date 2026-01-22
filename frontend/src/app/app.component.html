@@ -1,0 +1,127 @@
+<div class="app-shell">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">⛅</div>
+      <div>
+        <h1>WeatherApp</h1>
+        <p>Nowoczesna prognoza pogody w zasięgu ręki</p>
+      </div>
+    </div>
+    <button class="ghost" (click)="loadHistory()">Odśwież historię</button>
+  </header>
+
+  <main>
+    <section class="search-card">
+      <div class="field">
+        <label for="cityInput">Miasto</label>
+        <input
+          id="cityInput"
+          type="text"
+          placeholder="Wpisz nazwę miasta..."
+          [(ngModel)]="city"
+          (keyup.enter)="search()"
+        >
+      </div>
+      <div class="field">
+        <label for="daysSelect">Dni prognozy</label>
+        <select id="daysSelect" [(ngModel)]="days">
+          <option *ngFor="let d of [1, 2, 3, 4, 5]" [value]="d">{{ d }}</option>
+        </select>
+      </div>
+      <button class="primary" (click)="search()" [disabled]="isLoading">
+        {{ isLoading ? 'Pobieram dane...' : 'Sprawdź pogodę' }}
+      </button>
+      <div class="popular">
+        <span>Popularne:</span>
+        <button class="chip" *ngFor="let p of popularCities" (click)="selectCity(p)">
+          {{ p }}
+        </button>
+      </div>
+    </section>
+
+    <section class="status" *ngIf="errorMessage">
+      <span>⚠</span>
+      <p>{{ errorMessage }}</p>
+    </section>
+
+    <section class="grid">
+      <article class="card current-card" *ngIf="current">
+        <div class="current-header">
+          <div>
+            <h2>{{ current.city }}</h2>
+            <p class="muted">{{ current.description }}</p>
+          </div>
+          <div class="temperature">{{ current.temperature | number: '1.0-0' }}°C</div>
+        </div>
+        <div class="stats">
+          <div>
+            <span>Odczuwalna</span>
+            <strong>{{ current.feelsLike | number: '1.0-0' }}°C</strong>
+          </div>
+          <div>
+            <span>Wilgotność</span>
+            <strong>{{ current.humidity }}%</strong>
+          </div>
+        </div>
+      </article>
+
+      <article class="card forecast-card" *ngIf="forecast.length">
+        <h3>Prognoza</h3>
+        <div class="forecast-grid">
+          <div class="forecast-item" *ngFor="let item of forecast">
+            <p class="forecast-date">{{ item.forecastDate | date: 'EEE, d MMM' }}</p>
+            <p class="forecast-desc">{{ item.description }}</p>
+            <p class="forecast-temp">{{ item.temperature | number: '1.0-0' }}°C</p>
+            <p class="muted">Odczuwalna {{ item.feelsLike | number: '1.0-0' }}°C</p>
+            <p class="muted">Wilgotność {{ item.humidity }}%</p>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="card history-card">
+      <div class="history-header">
+        <div>
+          <h3>Historia zapytań</h3>
+          <p class="muted">Ostatnie wyszukania i prognozy</p>
+        </div>
+        <div class="history-filters">
+          <input
+            type="text"
+            placeholder="Filtr miasto"
+            [(ngModel)]="historyCity"
+          >
+          <select [(ngModel)]="historyType">
+            <option value="">Wszystkie</option>
+            <option value="CURRENT">Bieżąca</option>
+            <option value="FORECAST">Prognoza</option>
+          </select>
+          <button class="ghost" (click)="loadHistory()">Filtruj</button>
+        </div>
+      </div>
+
+      <div class="history-table" *ngIf="history.length; else emptyHistory">
+        <div class="history-row header">
+          <span>Miasto</span>
+          <span>Typ</span>
+          <span>Temperatura</span>
+          <span>Opis</span>
+          <span>Data</span>
+        </div>
+        <div class="history-row" *ngFor="let item of history; trackBy: trackHistory">
+          <span>{{ item.city }}</span>
+          <span>{{ item.type }}</span>
+          <span>{{ item.temperature | number: '1.0-0' }}°C</span>
+          <span>{{ item.description }}</span>
+          <span>{{ item.requestedAt | date: 'dd MMM, HH:mm' }}</span>
+        </div>
+      </div>
+
+      <ng-template #emptyHistory>
+        <div class="empty">
+          Brak danych historycznych. Wyszukaj pogodę, aby zapisać pierwszy wpis.
+        </div>
+      </ng-template>
+    </section>
+  </main>
+</div>

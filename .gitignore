@@ -1,0 +1,18 @@
+## Backend (Java / Maven)
+backend/javaweatherapp/target/
+**/.DS_Store
+**/Thumbs.db
+
+## Frontend (Angular / Node)
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/.vscode/
+
+## Logs
+*.log
+*.pid
+
+## IDE
+.idea/
+.vscode/
